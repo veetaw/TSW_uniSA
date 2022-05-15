@@ -2,15 +2,14 @@
 	charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
-
-	Collection<?> products = (Collection<?>) request.getAttribute("products");
+Collection<?> products = (Collection<?>) request.getAttribute("products");
 	if(products == null) 
 	{
 		response.sendRedirect("./product");	
 		return;
 	}
 	
-	ProductBean product = (ProductBean) request.getAttribute("product");
+	VinoBean product = (VinoBean) request.getAttribute("product");
 	Cart cart = (Cart) request.getAttribute("cart");
 %>
 
@@ -18,7 +17,7 @@
 <html>
 
 	<%@ page contentType="text/html; 
-	charset=UTF-8" import="java.util.*, model.ProductBean, model.Cart"%>
+	charset=UTF-8" import="java.util.*,model.VinoBean,model.Cart"%>
 	
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -37,13 +36,13 @@
 				<th>Comandi</th>
 			</tr>
 			<%
-				if (products != null && products.size() != 0) 
-				{
-					Iterator<?> it = products.iterator();
-					
-					while (it.hasNext()) 
+			if (products != null && products.size() != 0) 
 					{
-						ProductBean bean = (ProductBean) it.next();
+						Iterator<?> it = products.iterator();
+						
+						while (it.hasNext()) 
+						{
+							VinoBean bean = (VinoBean) it.next();
 			%>
 			<tr>
 				<td><%=bean.getCode()%></td>
@@ -56,24 +55,24 @@
 			</tr>
 			
 			<%
-					}
-				} 
-				else 
-				{
-			%>
+						}
+								} 
+								else 
+								{
+						%>
 			<tr>
 				<td colspan="6">Nessun prodotto disponibile!</td>
 			</tr>
 			<%
-				}
+			}
 			%>
 		</table>
 		
 		
 		<%
-			if (product != null) 
-			{
-		%>
+						if (product != null) 
+							{
+						%>
 		<h2>Dettagli</h2>
 		<table id="tabellaDettagli" border="1">
 			<tr>
@@ -92,7 +91,7 @@
 			</tr>
 		</table>
 		<%
-			}
+		}
 		%>
 		<br><h2>INSERISCI</h2>
 		<form id="formInserisci" action="product" method="post">
@@ -113,8 +112,10 @@
 			<input type="reset" value="Reset">
 		</form>
 		
-		<% if(cart != null) 
-			{ %>
+		<%
+				if(cart != null) 
+					{
+				%>
 			
 			<h2>Carrello</h2>
 			<table border="1">
@@ -124,10 +125,11 @@
 				<th>Comandi</th>
 			</tr>
 			
-			<% List<ProductBean> prodcart = cart.getProducts(); 	
-			   for(ProductBean beancart: prodcart) 
-			   {
-			%>
+			<%
+						List<VinoBean> prodcart = cart.getProducts(); 	
+							   for(VinoBean beancart: prodcart) 
+							   {
+						%>
 			<tr>
 				<td><%=beancart.getCode()%></td>
 				<td><%=beancart.getName()%></td>

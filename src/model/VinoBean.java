@@ -2,7 +2,7 @@ package model;
 
 import java.io.Serializable;
 
-public class ProductBean implements Serializable
+public class VinoBean implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -17,11 +17,11 @@ public class ProductBean implements Serializable
 	private String tipo;
 	private String sapore;
 
-	public ProductBean() {
+	public VinoBean() {
 
 	}
 
-	public ProductBean(String idProdotto, String nome, String descrizione, Float gradazione, Float prezzo, String regione, String url, String tipo, String sapore) {
+	public VinoBean(String idProdotto, String nome, String descrizione, Float gradazione, Float prezzo, String regione, String url, String tipo, String sapore) {
 		this.idProdotto = idProdotto;
 		this.nome = nome;
 		this.descrizione = descrizione;

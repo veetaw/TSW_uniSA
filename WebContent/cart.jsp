@@ -1,22 +1,11 @@
 <%@ page language="java" contentType="text/html; 
 	charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%
-Collection<?> products = (Collection<?>) request.getAttribute("prodotti");
-	if(products == null) 
-	{
-		response.sendRedirect("./home");
-		return;
-	}
-	
-	VinoBean product = (VinoBean) request.getAttribute("prodotto");
-%>
-
 <!DOCTYPE html>
 <html>
 
 	<%@ page contentType="text/html; 
-	charset=UTF-8" import="java.util.*,model.VinoBean,model.Cart"%>
+	charset=UTF-8" import="java.util.*,model.VinoBean, model.Cart"%>
 	
 	<head>
 	    <title>Catalogo La casa di Bacco</title>
@@ -34,45 +23,10 @@ Collection<?> products = (Collection<?>) request.getAttribute("prodotti");
 		<main class="mdc-top-app-bar--fixed-adjust">
 		    <div class="mdc-layout-grid">
                 <span class="mdc-typography--headline6">
-                    Lista prodotti disponibili
+                    Carrello
 	            </span>
 	        <div class="mdc-layout-grid__inner">
 	        	
-	        	
-	        <%
-	        		        		        if (products.size() != 0)
-	        		        		        		{
-	        		        		        			Iterator<?> it = products.iterator();
-	        		        		        			
-	        		        		        			while (it.hasNext()) 
-	        		        		        			{
-	        		        		        				VinoBean bean = (VinoBean) it.next();
-	        		        		        %>
-	        	
-	        		
-						<%@ include file="include/product_card.jsp" %>	        	
-	        	
-	       	<%
-					}
-				} 
-				else 
-				{
-			%>
-				<p>Nessun prodotto disponibile!</p>
-			<%
-				}
-			%>
-	       
-	        <%
-				if (product != null) 
-				{
-			%>
-				info prodotto
-			<%
-				}
-			%>
-	        
-	        
 	        </div>
 		
 		</main>

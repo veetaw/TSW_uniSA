@@ -3,34 +3,27 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cart
-{
-	private List<ProductBean> products;
+public class Cart {
+    private List<VinoBean> products;
 
-	public Cart()
-	{
-		products = new ArrayList<ProductBean>();
-	}
+    public Cart() {
+        products = new ArrayList<VinoBean>();
+    }
 
-	public void addProduct(ProductBean product)
-	{
-		products.add(product);
-	}
+    public void addProduct(VinoBean product) {
+        products.add(product);
+    }
 
-	public void deleteProduct(ProductBean product)
-	{
-		for (ProductBean prod : products)
-		{
-			if (prod.getIdProdotto() == product.getIdProdotto())
-			{
-				products.remove(prod);
-				break;
-			}
-		}
-	}
+    public void deleteProduct(VinoBean product) {
+        for (VinoBean prod : products) {
+            if (prod.getIdProdotto() == product.getIdProdotto()) {
+                products.remove(prod);
+                break;
+            }
+        }
+    }
 
-	public List<ProductBean> getProducts()
-	{
-		return products;
-	}
+    public List<VinoBean> getProducts() {
+        return products;
+    }
 }

@@ -1,15 +1,15 @@
 <%@ page language="java" contentType="text/html; 
 	charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%	
-	ProductBean product = (ProductBean) request.getAttribute("details");
+<%
+VinoBean product = (VinoBean) request.getAttribute("details");
 %>
 
 <!DOCTYPE html>
 <html>
 
 	<%@ page contentType="text/html; 
-	charset=UTF-8" import="java.util.*, model.ProductBean, model.Cart"%>
+	charset=UTF-8" import="java.util.*,model.VinoBean,model.Cart"%>
 	
 	<head>
 	    <title>Catalogo La casa di Bacco</title>
@@ -33,7 +33,7 @@
                     	<%= product.getNome() %> <br>
 	            	</span>
 					<span class="mdc-typography--body1" style="color: red; font-weight: bold;">
-                    	<%= product.getPrezzo() %> € <br> <br>
+                    	<%= String.format("%.2f", product.getPrezzo()) %> € <br> <br>
 	            	</span>
 	            	
 	            	<span class="mdc-typography--caption">

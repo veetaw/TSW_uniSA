@@ -6,78 +6,79 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class DriverManagerConnectionPool
-{
-	private static List<Connection> freeDbConnections;
+import utils.Constants;
 
-	static
-	{
-		freeDbConnections = new LinkedList<Connection>();
-		
-		try
-		{
-			Class.forName("com.mysql.cj.jdbc.Driver");
-		}
-		catch (ClassNotFoundException e)
-		{
-			System.out.println("Driver della Base di Dati non trovato! Errore:" + e.getMessage());
-		}
-	}
+public class DriverManagerConnectionPool {
+    // Lista che contiene le connessioni disponibili
+    private static List<Connection> freeDbConnections;
 
-	private static synchronized Connection createDBConnection() throws SQLException
-	{
-		Connection newConnection = null;
-        String ip = "localhost";
-        String port = "3306";
-        String db = "progetto_tsw";
-        String username = "root";
-        String password = "password";
+    static {
+        freeDbConnections = new LinkedList<Connection>();
 
-		newConnection = DriverManager.getConnection("jdbc:mysql://" + ip + ":" + port + "/" + db
-				+ "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
-				username, password);
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Driver della Base di Dati non trovato! Errore:" + e.getMessage());
+        }
+    }
 
-		newConnection.setAutoCommit(false);
-		
-		return newConnection;
-	}
+    /*
+        Funzione che si occupa di creare una nuova connessione al database
 
-	public static synchronized Connection getConnection() throws SQLException
-	{
-		Connection connection;
+        I parametri del DB (username, password, etc) sono nel file utils/Constants.java
+     */
+    private static synchronized Connection createDBConnection() throws SQLException {
+        Connection newConnection = null;
 
-		if (!freeDbConnections.isEmpty())
-		{
-			connection = (Connection) freeDbConnections.get(0);
-			freeDbConnections.remove(0);
+        newConnection = DriverManager.getConnection("jdbc:mysql://"
+                        + Constants.DB_ADDR
+                        + ":"
+                        + Constants.DB_PORT
+                        + "/"
+                        + Constants.DB_NAME
+                        + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
+                Constants.DB_USERNAME,
+                Constants.DB_PASSWORD
+        );
 
-			try
-			{
-				if (connection.isClosed())
-				{
-					connection = getConnection();
-				}
-			}
-			catch (SQLException e)
-			{
-				connection.close();
-				connection = getConnection();
-			}
-		}
-		else
-		{
-			connection = createDBConnection();
-		}
+        newConnection.setAutoCommit(false);
 
-		return connection;
-	}
+        return newConnection;
+    }
 
-	public static synchronized void releaseConnection(Connection connection) throws SQLException
-	{
-		if (connection != null)
-		{
-			freeDbConnections.add(connection);
-		}
-	}
-	
+    /*
+        Funzione che si occupa di prendere la prima connessione disponibile all'interno della
+        lista freeDbConnections, oppure in caso non ce ne siano crearne una nuova.
+     */
+    public static synchronized Connection getConnection() throws SQLException {
+        Connection connection;
+
+        if (!freeDbConnections.isEmpty()) {
+            connection = (Connection) freeDbConnections.get(0);
+            freeDbConnections.remove(0);
+
+            try {
+                if (connection.isClosed()) {
+                    connection = getConnection();
+                }
+            } catch (SQLException e) {
+                connection.close();
+                connection = getConnection();
+            }
+        } else {
+            connection = createDBConnection();
+        }
+
+        return connection;
+    }
+
+    /*
+        Libera una connessione per il prossimo utilizzo.
+     */
+    public static synchronized void releaseConnection(Connection connection) throws SQLException {
+        if (connection != null) {
+            freeDbConnections.add(connection);
+        }
+    }
+
 }

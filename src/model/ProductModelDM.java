@@ -7,73 +7,70 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class ProductModelDM implements ProductModel
-{
-	private static final String TABLE_NAME = "vino";
+import utils.Constants;
 
-	@Override
-	public synchronized void doSave(ProductBean product) throws SQLException
-	{
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
+// Driver manager
+public class ProductModelDM implements ProductModel {
+    @Override
+    public synchronized void doSave(VinoBean product) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
-		String insertSQL = "INSERT INTO " 
-							+ ProductModelDM.TABLE_NAME
-							+ " (NAME, DESCRIPTION, PRICE, QUANTITY) VALUES (?, ?, ?, ?)";
+        String insertSQL = "INSERT INTO " + Constants.VINO_DB_TABLE_NAME
+                + " (id_prodotto, nome, descrizione, gradazione, prezzo, regione, url, tipo, sapore)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-		try
-		{
+        // TODO: gestione errori in caso di prodotto già presente ed altro
+        // in caso di errore dovrà essere mostrato poi nel sito web
+        try {
 			connection = DriverManagerConnectionPool.getConnection();
 			preparedStatement = connection.prepareStatement(insertSQL);
-			/*
-			preparedStatement.setString(1, product.getName());
-			preparedStatement.setString(2, product.getDescription());
-			preparedStatement.setInt(3, product.getPrice());
-			preparedStatement.setInt(4, product.getQuantity());
 
-			preparedStatement.executeUpdate();
-*/
-			connection.commit();
-		}
-		finally
-		{
-			try
-			{
-				if (preparedStatement != null)
-				{
-					preparedStatement.close();
-				}
-			}
-			finally
-			{
-				DriverManagerConnectionPool.releaseConnection(connection);
-			}
-		}
-	}
+            preparedStatement.setString(1, product.getIdProdotto());
+            preparedStatement.setString(2, product.getNome());
+            preparedStatement.setString(3, product.getDescrizione());
+            preparedStatement.setFloat(4, product.getGradazione());
+            preparedStatement.setFloat(5, product.getPrezzo());
+            preparedStatement.setString(6, product.getRegione());
+            preparedStatement.setString(7, product.getUrl());
+            preparedStatement.setString(8, product.getTipo());
+            preparedStatement.setString(9, product.getSapore());
 
-	@Override
-	public synchronized ProductBean doRetrieveByKey(String code) throws SQLException
-	{
+            preparedStatement.executeUpdate();
+
+            connection.commit();
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+            } finally {
+                DriverManagerConnectionPool.releaseConnection(connection);
+            }
+        }
+    }
+
+    @Override
+    public synchronized VinoBean doRetrieveByKey(String code) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
-		ProductBean bean = new ProductBean();
+		VinoBean bean = new VinoBean();
 
-		String selectSQL = "SELECT * FROM " 
-							+ ProductModelDM.TABLE_NAME 
-							+ " WHERE id_prodotto = ?";
+		String selectSQL = "SELECT * FROM "
+				+ Constants.VINO_DB_TABLE_NAME
+				+ " WHERE id_prodotto = ?";
 
-		try
-		{
+		// TODO: anche qui capire se gestire errore oppure va bene tornare un bean con valori nulli
+		try {
 			connection = DriverManagerConnectionPool.getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL);
-			
+
 			preparedStatement.setString(1, code);
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 
-			while (resultSet.next())
-			{
+			while (resultSet.next()) {
 				bean.setIdProdotto(resultSet.getString("id_prodotto"));
 				bean.setNome(resultSet.getString("nome"));
 				bean.setDescrizione(resultSet.getString("descrizione"));
@@ -84,88 +81,72 @@ public class ProductModelDM implements ProductModel
 				bean.setTipo(resultSet.getString("tipo"));
 				bean.setSapore(resultSet.getString("sapore"));
 			}
-		}
-		finally
-		{
-			try
-			{
-				if (preparedStatement != null)
-				{
+		} finally {
+			try {
+				if (preparedStatement != null) {
 					preparedStatement.close();
 				}
-			}
-			finally
-			{
+			} finally {
 				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
-		return bean;
-	}
 
-	@Override
-	public synchronized boolean doDelete(int code) throws SQLException
-	{
+		return bean;
+    }
+
+    @Override
+    public synchronized boolean doDelete(String code) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
 		int result = 0;
+		String deleteSQL = "UPDATE " + Constants.VINO_DB_TABLE_NAME
+				+ " SET eliminato = true WHERE id_prodotto = ?";
 
-		String deleteSQL = "DELETE FROM " 
-							+ ProductModelDM.TABLE_NAME 
-							+ " WHERE CODE = ?";
-
-		try
-		{
+		try {
 			connection = DriverManagerConnectionPool.getConnection();
 			preparedStatement = connection.prepareStatement(deleteSQL);
-			
-			preparedStatement.setInt(1, code);
+
+			preparedStatement.setString(1, code);
 
 			result = preparedStatement.executeUpdate();
-		}
-		finally
-		{
-			try
-			{
-				if (preparedStatement != null)
-				{
+		} finally {
+			try {
+				if (preparedStatement != null) {
 					preparedStatement.close();
 				}
-			}
-			finally
-			{
+			} finally {
 				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
-		return (result != 0);
-	}
 
-	@Override
-	public synchronized Collection<ProductBean> doRetrieveAll(String order) throws SQLException
-	{
+		// Se l'operazione è andata a buon fine il risultato sarà diverso da 1
+		return (result != 0);
+    }
+
+    @Override
+    public synchronized Collection<VinoBean> doRetrieveAll(String order) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
-		Collection<ProductBean> products = new LinkedList<ProductBean>();
+		Collection<VinoBean> products = new LinkedList<VinoBean>();
 
-		String selectSQL = "SELECT * FROM " 
-							+ ProductModelDM.TABLE_NAME;
+		String selectSQL = "SELECT * FROM "
+				+ Constants.VINO_DB_TABLE_NAME + " WHERE eliminato != true";
 
-		if (order != null && !order.equals(""))
-		{
+		if (order != null && !order.equals("")) {
 			selectSQL += " ORDER BY " + order;
 		}
 
-		try
-		{
+		// TODO: gestione degli errori
+		try {
 			connection = DriverManagerConnectionPool.getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL);
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 
-			while (resultSet.next())
-			{
-				ProductBean bean = new ProductBean();
+			while (resultSet.next()) {
+				VinoBean bean = new VinoBean();
 
 				bean.setIdProdotto(resultSet.getString("id_prodotto"));
 				bean.setNome(resultSet.getString("nome"));
@@ -176,25 +157,25 @@ public class ProductModelDM implements ProductModel
 				bean.setUrl(resultSet.getString("url"));
 				bean.setTipo(resultSet.getString("tipo"));
 				bean.setSapore(resultSet.getString("sapore"));
-				
+
 				products.add(bean);
 			}
-		}
-		finally
-		{
-			try
-			{
-				if (preparedStatement != null)
-				{
+		} finally {
+			try {
+				if (preparedStatement != null) {
 					preparedStatement.close();
 				}
-			}
-			finally
-			{
+			} finally {
 				DriverManagerConnectionPool.releaseConnection(connection);
 			}
 		}
+
 		return products;
+	}
+
+	@Override
+	public synchronized Collection<VinoBean> doRetrieveAll() throws SQLException {
+		return this.doRetrieveAll("");
 	}
 
 }
