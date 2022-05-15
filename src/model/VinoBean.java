@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 public class VinoBean implements Serializable
 {
@@ -104,9 +105,25 @@ public class VinoBean implements Serializable
 	public void setSapore(String sapore) {
 		this.sapore = sapore;
 	}
+	
+	public HashMap<String, Object> toJSONMap() {
+		HashMap<String, Object> map = new HashMap<>();
+		
+		map.put("id_prodotto", this.idProdotto);
+		map.put("nome", this.nome);
+		map.put("descrizione", this.descrizione);
+		map.put("gradazione", this.gradazione);
+		map.put("prezzo", this.prezzo);
+		map.put("regione", this.regione);
+		map.put("url", this.url);
+		map.put("tipo", this.tipo);
+		map.put("sapore", this.sapore);
+		
+		return map;
+	}
 
 	@Override
-	public java.lang.String toString() {
+	public String toString() {
 		return "VinoBean{" +
 				"idProdotto='" + idProdotto + '\'' +
 				", nome='" + nome + '\'' +
@@ -119,5 +136,14 @@ public class VinoBean implements Serializable
 				", sapore='" + sapore + '\'' +
 				'}';
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return this.idProdotto.equals(((VinoBean) obj).getIdProdotto());
+	}
 
+	@Override
+	public int hashCode() {
+		return Integer.parseInt(this.idProdotto);
+	}
 }

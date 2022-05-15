@@ -1,29 +1,46 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public class Cart {
-    private List<VinoBean> products;
+    private HashMap<VinoBean, Integer> products;
 
     public Cart() {
-        products = new ArrayList<VinoBean>();
+        products = new HashMap<VinoBean, Integer>();
     }
 
     public void addProduct(VinoBean product) {
-        products.add(product);
+        Integer value = products.containsKey(product) ? products.get(product) : 0;
+        products.put(product, value + 1);
     }
 
     public void deleteProduct(VinoBean product) {
-        for (VinoBean prod : products) {
-            if (prod.getIdProdotto() == product.getIdProdotto()) {
-                products.remove(prod);
-                break;
-            }
-        }
+    	products.remove(product);
+    }
+    
+    public void removeOneProduct(VinoBean product) {
+    	if(!products.containsKey(product)) {
+    		return;
+    	}
+    	
+    	Integer value = products.get(product);
+    	if(value == 1) {
+    		deleteProduct(product);
+    		return;
+    	}
+
+    	products.put(product, value - 1);
     }
 
-    public List<VinoBean> getProducts() {
+    public HashMap<VinoBean, Integer> getProducts() {
         return products;
+    }
+    
+    public void emptyCart() {
+    	this.products.clear();
+    }
+    
+    public boolean contains(VinoBean product) {
+    	return products.containsKey(product);
     }
 }
