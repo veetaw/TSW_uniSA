@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Creazione Account</title>
+		
+		<style>
+			body 
+			{
+				width: 400px;
+				margin: 0 auto;
+			}
+			
+			legend 
+			{
+				padding: 3px;
+				border: 1px solid purple;
+				border-radius: 3px;
+			}
+			
+			fieldset 
+			{
+				border: 1px solid purple;
+				border-radius: 7px;		
+			}
+			
+			.backYellow 
+			{
+				background-color: yellow;
+			}
+			
+			.error 
+			{
+				background-color: red;
+			}
+			
+			hr 
+			{
+				border: 0;
+				border-top: 1px solid purple;
+				-webkit-margin-start: -0.8em;
+				-webkit-margin-end: -0.8em;
+			}
+			
+			.overClass 
+			{
+				font-weight: bold;   color: red;
+			}
+			.outClass 
+			{
+				font-weight: normal; color: black;
+			}
+			
+		</style>
+		
+		<script>
+		
+			var count = 2;
+
+			function checkUsername(input) 
+			{
+				var username = /^\w{4,16}+$/;
+				
+				if(input.value.match(name)) 
+				{
+					return true
+				}
+			
+				return false;	
+			}
+
+			function checkPassword(input) 
+			{
+				var password = /^\w{6,16}+$/;
+				
+				if(input.value.match(name)) 
+				{
+					return true
+				}
+			
+				return false;	
+			}
+	
+			function checkNameSurname(input) 
+			{
+				var name = /^[A-Za-z]+$/;;
+				
+				if(input.value.match(name)) 
+				{
+					return true
+				}
+			
+				return false;	
+			}
+			
+			function checkEmail(input) 
+			{
+				var email = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+				
+				if(input.value.match(email)) 
+				{
+					return true;
+				}
+				
+				return false;	
+			}
+			
+			function validate(obj) 
+			{	
+				var valid = true;	
+				
+				var username = document.getElementsByName("username")[0];
+				
+				if(!checkUsername(username)) 
+				{
+					valid = false;
+					name.classList.add("error");
+				} 
+				else 
+				{
+					name.classList.remove("error");
+
+					const elem = document.createElement("p");
+					elem.innerText = "Username non corretto! Rispetta i requisiti!";
+					document.getElementById("usernameForm").appendChild(elem);
+				}
+				
+				var password = document.getElementsByName("password")[0];
+				
+				if(!checkPassword(password)) 
+				{
+					valid = false;
+					name.classList.add("error");
+				} 
+				else 
+				{
+					name.classList.remove("error");
+					
+					const elem = document.createElement("p");
+					elem.innerText = "Password non corretta! Rispetta i requisiti!";
+					document.getElementById("passwordForm").appendChild(elem);
+				}
+				
+				var name = document.getElementsByName("firstname")[0];
+				
+				if(!checkNameSurname(name)) 
+				{
+					valid = false;
+					name.classList.add("error");
+				} 
+				else 
+				{
+					name.classList.remove("error");
+
+					const elem = document.createElement("p");
+					elem.innerText = "Nome non corretto! Rispetta i requisiti!";
+					document.getElementById("nomeForm").appendChild(elem);
+				}
+				
+				var surname = document.getElementsByName("lastname")[0];
+				
+				if(!checkNameSurname(surname)) 
+				{
+					valid = false;
+					surname.classList.add("error");
+				} 
+				else 
+				{
+					surname.classList.remove("error");
+
+					const elem = document.createElement("p");
+					elem.innerText = "Cognome non corretto! Rispetta i requisiti!";
+					document.getElementById("cognomeForm").appendChild(elem);
+				}
+				
+				var email = document.getElementsByName("email")[0];
+				
+				if(!checkEmail(email)) 
+				{
+					valid = false;
+					email.classList.add("error");
+				} 
+				else 
+				{
+					email.classList.remove("error");
+
+					const elem = document.createElement("p");
+					elem.innerText = "E-mail non corretta! Rispetta i requisiti!";
+					document.getElementById("emailForm").appendChild(elem);
+				}	
+				
+				if(valid) 
+				{
+					obj.submit();
+				}
+			}
+			
+			var baccoRegistrationForm = document.getElementById("registrationForm");
+			baccoRegistrationForm.onmouseover = function(e) { e.target.className = "overClass"; };
+			baccoRegistrationForm.onmouseout  = function(e) { e.target.className = "outClass";  };
+			
+		</script>
+		
+	</head>
+	
+	<body>
+		<h3><i>Registrazione "La Casa di Bacco"</i></h3>
+		<form id="registrationForm" action="Registration" onsubmit="event.preventDefault(); validate(this)">
+			<fieldset>
+				<legend>Creazione Account</legend>
+				<label for="username">Username:</label>
+				<input id="usernameForm" type="text" name="username" placeholder="min 4 - max 16 char" required>
+				<br>
+				<br>
+				<label for="password">Password:</label>
+				<input id="passwordForm" type="password" name="password" placeholder="min 6 - max 16 char" required>
+				<br>
+				<br>
+				<label for="firstname">Nome:</label>
+				<input id="nomeForm" type="text" name="firstname" placeholder="Il tuo Nome" required>
+				<br>
+				<br>
+				<label for="lastname">Cognome:</label>
+				<input id="cognomeForm" type="text" name="lastname" placeholder="Il tuo Cognome" required>	
+				<br>
+				<br>
+				<label for="email">E-mail:</label>
+				<input id="emailForm" type="text" name="email" placeholder="mario.rossi@gmail.it" required>	
+				<br>
+				<br>
+				<hr>
+				
+				<input type="submit" value="Registrati">&nbsp;
+				<input type="reset" value="Reset">
+				
+			</fieldset>
+		</form>
+		
+	</body>
+
+</html>
