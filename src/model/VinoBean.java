@@ -3,8 +3,7 @@ package model;
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class VinoBean implements Serializable
-{
+public class VinoBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String idProdotto;
@@ -22,7 +21,8 @@ public class VinoBean implements Serializable
 
 	}
 
-	public VinoBean(String idProdotto, String nome, String descrizione, Float gradazione, Float prezzo, String regione, String url, String tipo, String sapore) {
+	public VinoBean(String idProdotto, String nome, String descrizione, Float gradazione, Float prezzo, String regione,
+			String url, String tipo, String sapore) {
 		this.idProdotto = idProdotto;
 		this.nome = nome;
 		this.descrizione = descrizione;
@@ -105,10 +105,10 @@ public class VinoBean implements Serializable
 	public void setSapore(String sapore) {
 		this.sapore = sapore;
 	}
-	
+
 	public HashMap<String, Object> toJSONMap() {
 		HashMap<String, Object> map = new HashMap<>();
-		
+
 		map.put("id_prodotto", this.idProdotto);
 		map.put("nome", this.nome);
 		map.put("descrizione", this.descrizione);
@@ -118,25 +118,17 @@ public class VinoBean implements Serializable
 		map.put("url", this.url);
 		map.put("tipo", this.tipo);
 		map.put("sapore", this.sapore);
-		
+
 		return map;
 	}
 
 	@Override
 	public String toString() {
-		return "VinoBean{" +
-				"idProdotto='" + idProdotto + '\'' +
-				", nome='" + nome + '\'' +
-				", descrizione='" + descrizione + '\'' +
-				", gradazione=" + gradazione +
-				", prezzo=" + prezzo +
-				", regione='" + regione + '\'' +
-				", url='" + url + '\'' +
-				", tipo='" + tipo + '\'' +
-				", sapore='" + sapore + '\'' +
-				'}';
+		return "VinoBean{" + "idProdotto='" + idProdotto + '\'' + ", nome='" + nome + '\'' + ", descrizione='"
+				+ descrizione + '\'' + ", gradazione=" + gradazione + ", prezzo=" + prezzo + ", regione='" + regione
+				+ '\'' + ", url='" + url + '\'' + ", tipo='" + tipo + '\'' + ", sapore='" + sapore + '\'' + '}';
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		return this.idProdotto.equals(((VinoBean) obj).getIdProdotto());

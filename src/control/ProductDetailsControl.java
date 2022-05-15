@@ -20,39 +20,36 @@ public class ProductDetailsControl extends HttpServlet {
 
 	static ProductModel model;
 
-	static
-	{
-		if (Constants.IS_DATA_SOURCE)
-		{
+	static {
+		if (Constants.IS_DATA_SOURCE) {
 			model = new ProductModelDS(); // DataSource
-		}
-		else
-		{
+		} else {
 			model = new ProductModelDM(); // DriverManager
 		}
 	}
 
-	public ProductDetailsControl()
-	{
+	public ProductDetailsControl() {
 		super();
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String id = request.getParameter("id");
 		try {
-			if(id != null && !id.isEmpty()) {
+			if (id != null && !id.isEmpty()) {
 				request.removeAttribute("details");
 				request.setAttribute("details", model.doRetrieveByKey(id));
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println("errore");
 		}
-	
+
 		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/details.jsp");
 		dispatcher.forward(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		doGet(request, response);
 	}
 
