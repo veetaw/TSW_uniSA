@@ -57,7 +57,7 @@ Collection<?> products = (Collection<?>) request.getAttribute("prodotti");
 				} 
 				else 
 				{
-			%>
+			%> 
 				<p>Nessun prodotto disponibile!</p>
 			<%
 				}

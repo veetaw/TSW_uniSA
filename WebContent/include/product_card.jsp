@@ -1,3 +1,8 @@
+<%@ page language="java" contentType="text/html; 
+	charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
+
 			       	<div class="mdc-layout-grid__cell">
 		                <div class="mdc-card">
 		                    <div class="mdc-card__primary-action" tabindex="1" style="padding: 16px;" onclick="window.location.href = 'details?id=<%=bean.getIdProdotto()%>'">
