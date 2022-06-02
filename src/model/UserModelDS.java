@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -86,13 +87,13 @@ public class UserModelDS {
 
 		final String insertQuery = "INSERT INTO utente"
 				+ "(username, password, nome, cognome, mail, tipo, via, n_civico, citta, nazione)"
-				+ " VALUES (?, ?, ?, ?, ?, ?, ?; ?, ?, ?)";
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(insertQuery);
 			
-			statement.setString(1, user.getUsername());
+			statement.setString(1, String.format("%.16s", UUID.randomUUID().toString())); // username non ha senso, da togliere nel database, lo metto random
 			statement.setString(2, password);
 			statement.setString(3, user.getNome());
 			statement.setString(4, user.getCognome());
@@ -104,7 +105,6 @@ public class UserModelDS {
 			statement.setString(10, user.getNazione());
 			
 			statement.executeUpdate();
-			connection.commit();
 		} finally {
 			try {
 				if (statement != null) {

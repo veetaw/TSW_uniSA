@@ -9,19 +9,18 @@
 	<%@ page contentType="text/html; 
 	charset=UTF-8" import="java.util.*"%>
 	
-	 		<%
- 			Boolean isUserLoggedIn = (Boolean) session.getAttribute("logged");
- 			if(isUserLoggedIn == null) isUserLoggedIn = false;
-			
-			// Un utente già loggato non può accedere a quest'area.
- 			if(isUserLoggedIn) {
- 				response.sendRedirect("home");
- 			}
- 		%>
+ 	<%
+		Boolean isUserLoggedIn = (Boolean) session.getAttribute("logged");
+		if(isUserLoggedIn == null) isUserLoggedIn = false;
+	
+		// Un utente già loggato non può accedere a quest'area.
+		if(isUserLoggedIn) {
+			//response.sendRedirect("home");
+		}
+	%>
 	
 	
 	<head>
-			<script src="js/login.js" type="javascript"></script>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
 			<title>Login La Casa di Bacco</title>
 		    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -31,7 +30,6 @@
 			src="https://code.jquery.com/jquery-3.6.0.min.js"
 			integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
 			crossorigin="anonymous"></script>
-	    
 	</head>
 	
 	<body style="padding: 0; margin: 0;" class="mdc-typography">
@@ -126,7 +124,8 @@
 			var data = jQuery.param({ email: email, password: password})
 			
 			if(!validateEmail(email)){
-				showError();	        
+				showError();	
+				return;
 			}
 			
 			
@@ -151,7 +150,6 @@
 			});
 		}
 		</script>
-		
 		<link rel="stylesheet" href="css/login.css">
 	</body>
 </html>

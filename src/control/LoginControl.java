@@ -90,6 +90,17 @@ public class LoginControl extends HttpServlet {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			JSONObject r = new JSONObject();
+			try {
+				r.put("status", -1);
+				r.put("error_message", "Errore SQL");
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+				System.out.println("Errore nella creazione del json d'errore");
+			}
+
+			response.getWriter().print(r);
+			return;
 		}
 	}
 

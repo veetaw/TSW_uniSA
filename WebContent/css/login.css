@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 body {
-	overflow: hidden;
+	overflow-x: hidden;
 }
 
 .text-field--container {
@@ -288,6 +288,7 @@ body {
 
 .cn {
     display: flex;
+    flex: 1;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -295,10 +296,20 @@ body {
     color: #550026;
 }
 
-@media screen and (max-width: 720px) {
+
+@media screen and (max-width: 600px) {
 	#left-image {
 		display:none;
 	}
+	
+	body {
+		overflow: auto; 
+	}
+	
+	.toast {
+		display: none;
+	}
+	
 }
 
 .toast{
