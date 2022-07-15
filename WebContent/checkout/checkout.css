@@ -9,10 +9,6 @@ body {
   min-height: 100%;
 }
 
-body {
-  background: linear-gradient(50deg, #f3c680, #bc477b);
-}
-
 /*--------------------
 Buttons
 --------------------*/
@@ -131,7 +127,7 @@ Form
 .form button {
   width: 100%;
   outline: none !important;
-  background: linear-gradient(180deg, #49a09b, #3d8291);
+  background: #880e4f;
   text-transform: uppercase;
   font-weight: bold;
   border: none;

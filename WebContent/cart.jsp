@@ -83,20 +83,27 @@
 					data: jQuery.param({ action: "list"}) ,
 					contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
 					success: function (response) {
+						$("#empty-cart").show();
+						$("#btn-checkout").hide();
+						$("#svuota-carrello").hide();
+						$("#cart-items-count-text").hide();
+						$("#cart_sum").html("");
 						if(response.carrello.length == 0) {
-							$("#empty-cart").show();
 							return;
+						} else if(response.carrello.length > 0) {
+							$("#btn-checkout").show();
+							$("#svuota-carrello").show();
+
+							$("#cart-items-count-text").html("<br>Sono presenti <b>" + response.carrello.length + "</b> elementi nel carrello.");
+							$("#cart-items-count-text").show();
+							
+							$("#cart_sum").html("Il totale del carrello è <b>" + getCartTotal(response.carrello).toFixed(2) + " €</b>"); 
+							
+							response.carrello.forEach(function(element) {
+								console.log(element);
+								$("#cart_list").append(getCartItemTemplate(element));
+							});
 						}
-						
-						$("#cart-items-count-text").html("Sono presenti <b>" + response.carrello.length + "</b> elementi nel carrello.");
-						$("#cart-items-count-text").show();
-						
-						$("#cart_sum").html("Il totale del carrello è <b>" + getCartTotal(response.carrello)) + "</b>";
-						
-						response.carrello.forEach(function(element) {
-							console.log(element);
-							$("#cart_list").append(getCartItemTemplate(element));
-						});
 					},
 					error: function () {
 						alert("error");
@@ -132,8 +139,6 @@
     			data: jQuery.param({ action: 'delete', id_prodotto: id}),
 				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
 				success: function (response) {
-					console.log("rimosso");
-					
 					clearPage();
 					initCart();
 				},
@@ -144,7 +149,26 @@
     		});
 		}
 		
+		function emptyCart() {
+    		$.ajax({
+    			url: 'cart',
+    			type: 'POST',
+    			data: jQuery.param({ action: 'empty'}),
+				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+				success: function (response) {					
+					clearPage();
+					initCart();
+				},
+				error: function () {
+					alert("error");
+				}
+
+    		});
+		}
 		
+		function goToCheckOut() {
+			window.location.href="checkout";
+		}
 		
 		$(document).ready(initCart);
 	</script>	
@@ -157,6 +181,11 @@
                 <span class="mdc-typography--headline6">
                     Carrello
 	            </span>
+	            	  <button class="mdc-button mdc-button--raised mdc-card__action mdc-card__action--button" id="svuota-carrello" onclick="emptyCart();" style="position: absolute; right: 16px; background-color: #550024">
+		  <span class="mdc-button__ripple"></span>
+		  <span class="mdc-button__label" style="color: #FFF">SVUOTA CARRELLO</span>
+	  </button>
+	            
 	        <div>
 	        	<span class="mdc-typography--headline5" id="empty-cart" style="display: none;">
 	        		Il carrello è vuoto, torna alla homepage per aggiungere
@@ -171,7 +200,7 @@
 		</ul>
 		
 		<span id="cart_sum" class="mdc-typography--body1"></span>
-	  <button class="mdc-button mdc-button--raised mdc-card__action mdc-card__action--button mdc-button--icon-leading" onclick="console.log('figa');" style="position: absolute; right: 16px; background-color: #550024">
+	  <button id="btn-checkout" class="mdc-button mdc-button--raised mdc-card__action mdc-card__action--button mdc-button--icon-leading" onclick="goToCheckOut();" style="position: absolute; right: 16px; background-color: #550024">
 		  <span class="mdc-button__ripple"></span>
 		  <i class="material-icons mdc-button__icon" aria-hidden="true" style="color: #FFF">add_shopping_cart</i>
 		  <span class="mdc-button__label" style="color: #FFF">ACQUISTA</span>

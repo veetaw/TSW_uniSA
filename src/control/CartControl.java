@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +43,11 @@ public class CartControl extends HttpServlet {
 	public CartControl() {
 		super();
 	}
+	
+	private void updateSession(HttpSession session) {
+		session.removeAttribute("cart");
+		session.setAttribute("cart", cart);
+	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -53,6 +59,7 @@ public class CartControl extends HttpServlet {
 			throws ServletException, IOException {
 		// imposto content type su json
 		response.setContentType("application/json");
+		HttpSession session = request.getSession();
 
 		String action = request.getParameter("action");
 
@@ -80,6 +87,7 @@ public class CartControl extends HttpServlet {
 				}
 
 				cart.addProduct(bean);
+				updateSession(session);
 
 				JSONObject r = new JSONObject();
 
@@ -128,6 +136,8 @@ public class CartControl extends HttpServlet {
 				}
 
 				cart.removeOneProduct(bean);
+				updateSession(session);
+
 
 				JSONObject r = new JSONObject();
 
@@ -162,6 +172,7 @@ public class CartControl extends HttpServlet {
 				}
 
 				cart.deleteProduct(bean);
+				updateSession(session);
 
 				JSONObject r = new JSONObject();
 
@@ -179,6 +190,7 @@ public class CartControl extends HttpServlet {
 		case "empty":
 			try {
 				cart.emptyCart();
+				updateSession(session);
 
 				JSONObject r = new JSONObject();
 				r.put("status", 1);

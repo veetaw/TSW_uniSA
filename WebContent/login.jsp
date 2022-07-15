@@ -11,11 +11,11 @@
 	
  	<%
 		Boolean isUserLoggedIn = (Boolean) session.getAttribute("logged");
-		if(isUserLoggedIn == null) isUserLoggedIn = false;
+		if(isUserLoggedIn == null || session.getAttribute("login_info") == null) isUserLoggedIn = false;
 	
 		// Un utente già loggato non può accedere a quest'area.
 		if(isUserLoggedIn) {
-			//response.sendRedirect("home");
+			response.sendRedirect("home");
 		}
 	%>
 	

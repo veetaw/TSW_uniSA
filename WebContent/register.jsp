@@ -7,11 +7,11 @@
 <html>
  	<%
 			Boolean isUserLoggedIn = (Boolean) session.getAttribute("logged");
-			if(isUserLoggedIn == null) isUserLoggedIn = false;
+			if(isUserLoggedIn == null || session.getAttribute("login_info") == null) isUserLoggedIn = false;
 		
 			// Un utente già loggato non può accedere a quest'area.
 			if(isUserLoggedIn) {
-				//response.sendRedirect("home");
+				response.sendRedirect("home");
 			}
 		%>
 	<head>
@@ -128,7 +128,7 @@
 				</div>								
 			  </div>
 			  	<center><button class="md-btn" onclick="handleRegisterBtnClick()">REGISTRATI</button></center>
-				<a href="register" class="pass-forgot">Hai già un account?</a>
+				<a href="login" class="pass-forgot">Hai già un account?</a>
 		  </div>
 		</div>
 		<script>		

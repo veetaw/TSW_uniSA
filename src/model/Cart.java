@@ -1,6 +1,9 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Cart {
 	private HashMap<VinoBean, Integer> products;
@@ -42,5 +45,17 @@ public class Cart {
 
 	public boolean contains(VinoBean product) {
 		return products.containsKey(product);
+	}
+	
+	public Collection<VinoBean> toCollection() {
+		ArrayList<VinoBean> cart = new ArrayList<>();
+		
+		for(Map.Entry<VinoBean, Integer> set : products.entrySet()) {
+			for(int i = 0; i < set.getValue(); i++) {
+				cart.add(set.getKey());
+			}
+		}
+		
+		return cart;
 	}
 }

@@ -1,15 +1,106 @@
+<%@ page language="java" contentType="text/html; 
+	charset=UTF-8"
+	pageEncoding="UTF-8"
+	import="java.util.*,model.*"%>
+<!DOCTYPE html>
 <html>
-	<head>
+	<%
+			Boolean isUserLoggedIn = (Boolean) session.getAttribute("logged");
+			if(isUserLoggedIn == null || session.getAttribute("login_info") == null) isUserLoggedIn = false;
 		
-		<link rel="stylesheet" href="checkout.css">
+			// Un utente già loggato non può accedere a quest'area.
+			if(!isUserLoggedIn) {
+				response.sendRedirect("login");
+				return;
+			}
+			
+			UserBean user = (UserBean) session.getAttribute("login_info");
+	%>
+
+	<%@ page contentType="text/html; 
+	charset=UTF-8" import="java.util.*,model.VinoBean, model.Cart"%>
+	<head>
+		<title>Inserisci dati carta</title>
+		<link rel="stylesheet" href="checkout/checkout.css">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+	    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+	    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+	    <link rel="stylesheet" href="css/main.css">
 		<script
 			src="https://code.jquery.com/jquery-3.6.0.min.js"
 			integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
 			crossorigin="anonymous"></script>
+			
+			
+		<script>
+		function getCartTotal(carrello) {
+			var somma = 0;
+			carrello.forEach(function(e) {somma += (e.count * e.vino.prezzo)});
+			return somma;
+		}
+
+		function getCartItemTemplate(element) {
+			return `<tr>
+		      <td data-label="Nome articolo">` + element.vino.nome + `</td>
+		      <td data-label="Quantità">` + element.count + `</td>
+		      <td data-label="Costo">` + element.count * element.vino.prezzo + `</td>
+		    </tr>`;
+		}
+		
+		var cart;
+		
+		function getCart() {
+			return $.ajax({
+				url: 'cart',
+				type: 'POST',
+				data: jQuery.param({ action: "list"}) ,
+				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+				success: function (response) {
+					if(response.carrello.length == 0) {
+						window.location.href= "home";
+						return;
+					} else if(response.carrello.length > 0) {
+						cart = response.carrello;
+						response.carrello.forEach(function(element) {
+							console.log(element);
+							$("#cart-list").append(getCartItemTemplate(element));
+						});
+						 
+						$("#costo").html("TOTALE: <b>" + getCartTotal(response.carrello).toFixed(2) + " €</b>"); 
+					}
+				},
+				});
+		}
+		
+		function checkout() {
+			return $.ajax({
+				url: 'checkout',
+				type: 'POST',
+				data: jQuery.param({ action: "new"}) ,
+				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+				success: function (response) {
+					if(response.status == 1) {
+						setTimeout(function() {
+							alert("Grazie per l'acquisto"); // TODO: fare una pagina con scritto grazie
+							window.location.href="home";
+						}, 1000);
+					}
+				},
+				});
+		}
+		
+		$(document).ready(getCart);
+
+		</script>
 	</head>
 
-
 	<body>
+	
+		<body style="padding: 0; margin: 0;" class="mdc-typography">
+		<%@ include file="../include/header.jsp" %>
+		<main class="mdc-top-app-bar--fixed-adjust" style="height: 100%; text-align: center;">	
 <div class="checkout">
   <div class="credit-card-box">
     <div class="flip">
@@ -38,7 +129,7 @@
         <div class="number"></div>
         <div class="card-holder">
           <label>Intestatario</label>
-          <div></div>
+          <div><%= user.getNome() + " " + user.getCognome() %></div>
         </div>
         <div class="card-expiration-date">
           <label>Scadenza</label>
@@ -78,14 +169,14 @@
   <form class="form" autocomplete="off" novalidate action="javascript:void(0);">
     <fieldset>
       <label for="card-number">Numero carta</label>
-      <input type="num" id="card-number" class="input-cart-number" maxlength="4" />
+      <input type="num" id="card-number" class="input-cart-number" maxlength="4"/>
       <input type="num" id="card-number-1" class="input-cart-number" maxlength="4" />
       <input type="num" id="card-number-2" class="input-cart-number" maxlength="4" />
       <input type="num" id="card-number-3" class="input-cart-number" maxlength="4" />
     </fieldset>
     <fieldset>
       <label for="card-holder">Intestatario carta</label>
-      <input type="text" id="card-holder" />
+      <input type="text" id="card-holder"/ value="<%= user.getNome() + " " + user.getCognome() %>">
     </fieldset>
     <fieldset class="fieldset-expiration">
       <label for="card-expiration-month">Data scadenza</label>
@@ -109,16 +200,11 @@
       <div class="select">
         <select id="card-expiration-year">
           <option></option>
-          <option>2016</option>
-          <option>2017</option>
-          <option>2018</option>
-          <option>2019</option>
-          <option>2020</option>
-          <option>2021</option>
-          <option>2022</option>
           <option>2023</option>
           <option>2024</option>
           <option>2025</option>
+          <option>2026</option>
+          <option>2027</option>
         </select>
       </div>
     </fieldset>
@@ -126,9 +212,33 @@
       <label for="card-ccv">CVV</label>
       <input type="text" id="card-ccv" maxlength="3" />
     </fieldset>
-    <button class="btn" onclick="console.log('figa')"><i class="fa fa-lock"></i> PAGA E CONCLUDI ORDINE</button>
+    <fieldset>
+      <label for="card-holder">Indirizzo di consegna</label>
+      <input type="text" id="card-holder"/>
+    </fieldset>
+    <button class="btn" onclick="checkout()"><i class="fa fa-lock"></i> PAGA E CONCLUDI ORDINE</button>
   </form>
 </div>
-		<script src="checkout.js"></script>
+	
+
+	<table style="color: black; width: 100vh; text-align: left; margin: 20px;">
+  <caption><span class="mdc-typography--headline6" style="color: black;">
+		RIASSUNTO CARRELLO:
+	</span></caption>
+  <thead>
+    <tr>
+      <th scope="col">Nome articolo</th>
+      <th scope="col">Quantità</th>
+      <th scope="col">Costo</th>
+    </tr>
+  </thead>
+  <tbody id ="cart-list">
+  </tbody>
+</table>
+<span class="mdc-typography--headline6" style="color: black; left: 0;" id="costo">
+		COSTO TOTALE DA PAGARE: 
+	</span>
+</main>
+		<script src="checkout/checkout.js"></script>
 	</body>
 </html>
