@@ -40,8 +40,20 @@ public class LoginControl extends HttpServlet {
 		HttpSession session = request.getSession();
 		session.removeAttribute("login_info");
 		session.setAttribute("logged", false);
-		
+				
 		if(request.getParameter("logout") != null) {
+			session.removeAttribute("login_info");
+			session.setAttribute("logged", false);
+			JSONObject r = new JSONObject();
+
+			try {
+				r.put("status", 1);
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+				System.out.println("Errore nella creazione del json d'errore");
+			}
+
+			response.getWriter().print(r);
 			return;
 		}
 		
