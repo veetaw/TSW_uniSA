@@ -16,4 +16,6 @@ public interface ProductModel {
 	// quando
 	// non è richiesto un ordinamento specifico
 	public Collection<VinoBean> doRetrieveAll() throws SQLException;
+	
+	public Collection<VinoBean> doSearch(String nome, String regione, String tipo, String gradazione, String orderByPrezzo) throws SQLException;
 }

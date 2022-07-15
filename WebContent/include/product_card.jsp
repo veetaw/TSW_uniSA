@@ -16,7 +16,7 @@
 		                    </div>
 		                    <div class="mdc-card__actions">
 		                      <span class="mdc-typography--body1" style="font-weight: bold;"><%= String.format("%.2f", bean.getPrezzo()) %> €</span>
-							  <button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--icon-leading" onclick="window.location.href = 'product?action=addC&id=<%=bean.getIdProdotto()%>'" style="position: absolute; right: 0;">
+							  <button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--icon-leading" onclick="addToCart(<%=bean.getIdProdotto()%>)" style="position: absolute; right: 0;">
 								  <span class="mdc-button__ripple"></span>
 								  <i class="material-icons mdc-button__icon" aria-hidden="true" style="color: #550024">add_shopping_cart</i>
 								  <span class="mdc-button__label" style="color: #550024">Aggiungi al carrello</span>

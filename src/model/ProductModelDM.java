@@ -174,5 +174,10 @@ public class ProductModelDM implements ProductModel {
 	public synchronized Collection<VinoBean> doRetrieveAll() throws SQLException {
 		return this.doRetrieveAll("");
 	}
+	
+	@Override
+	public synchronized Collection<VinoBean> doSearch(String nome, String regione, String tipo, String gradazione, String orderByPrezzo) throws SQLException {
+		return null; // TODO:
+	}
 
 }

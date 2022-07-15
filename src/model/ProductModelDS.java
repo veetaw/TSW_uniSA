@@ -230,5 +230,95 @@ public class ProductModelDS implements ProductModel {
 	public synchronized Collection<VinoBean> doRetrieveAll() throws SQLException {
 		return this.doRetrieveAll("");
 	}
+	
+	/* Funzione che è usata dalla schermata di ricerca, si occupa di cercare tutti
+	 * i vini e filtrarli in base ai filtri proposti dall'utente.
+	 * 
+	 */
+	public synchronized Collection<VinoBean> doSearch(String nome, String regione, String tipo, String gradazione, String orderByPrezzo) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		Collection<VinoBean> products = new LinkedList<VinoBean>();
+		
+		String _SQLQuery = "SELECT * from " + Constants.VINO_DB_TABLE_NAME + " WHERE nome LIKE '" + nome + "%' ";
+		
+		// se è stato passato un filtro per regione quindi la variabile regione non è nè null nè vuota, allora aggiungo
+		// il filtro alla query SQL
+		if(regione != null && !regione.isEmpty()) {
+			_SQLQuery += "AND regione LIKE '" + regione + "' ";
+		}
+		
+		// se è stato passato un filtro per tipo quindi la variabile tipo non è nè null nè vuota, allora aggiungo
+		// il filtro alla query SQL
+		if(tipo != null && !tipo.isEmpty()) {
+			_SQLQuery += "AND tipo LIKE '" + tipo + "' ";
+		}
+		
+		// se è stato passato un filtro per gradazione quindi la variabile gradazione non è nè null nè vuota, allora aggiungo
+		// il filtro alla query SQL.
+		// Vengono ritornati i risultati con gradazione maggiore di quello passato come parametro
+		if(gradazione != null && !gradazione.isEmpty()) {
+			_SQLQuery += "AND gradazione >= '" + gradazione + "' ";
+		}
+		
+		// controllo l'ordinamento
+		if(orderByPrezzo != null && !orderByPrezzo.isEmpty()) {
+			String _SQLStringOrderBy = "";
+			switch (orderByPrezzo.toLowerCase()) {
+			case "asc":
+				_SQLStringOrderBy = "ORDER BY prezzo ASC";
+				break;
+			case "desc":
+				_SQLStringOrderBy = "ORDER BY prezzo DESC";
+				break;
+			default:
+				break;
+			}
+			
+			_SQLQuery += _SQLStringOrderBy;
+		}
+		
+		// chiudo la query
+		_SQLQuery += ";";
+		
+		System.out.println(_SQLQuery);;
+
+		try {
+			connection = dataSource.getConnection();
+			preparedStatement = connection.prepareStatement(_SQLQuery);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+				VinoBean bean = new VinoBean();
+
+				bean.setIdProdotto(resultSet.getString("id_prodotto"));
+				bean.setNome(resultSet.getString("nome"));
+				bean.setDescrizione(resultSet.getString("descrizione"));
+				bean.setGradazione(resultSet.getFloat("gradazione"));
+				bean.setPrezzo(resultSet.getFloat("prezzo"));
+				bean.setRegione(resultSet.getString("regione"));
+				bean.setUrl(resultSet.getString("url"));
+				bean.setTipo(resultSet.getString("tipo"));
+				bean.setSapore(resultSet.getString("sapore"));
+
+				products.add(bean);
+			}
+		} finally {
+			try {
+				if (preparedStatement != null) {
+					preparedStatement.close();
+				}
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		}
+
+		return products;
+	}
+	
 
 }
