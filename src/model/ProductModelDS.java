@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.UUID;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -52,7 +54,7 @@ public class ProductModelDS implements ProductModel {
 			connection = dataSource.getConnection();
 			preparedStatement = connection.prepareStatement(insertSQL);
 
-			preparedStatement.setString(1, product.getIdProdotto());
+			preparedStatement.setString(1, product.getIdProdotto() == null ? (String.format("%.4s", UUID.randomUUID().toString() )): product.getIdProdotto());
 			preparedStatement.setString(2, product.getNome());
 			preparedStatement.setString(3, product.getDescrizione());
 			preparedStatement.setFloat(4, product.getGradazione());
@@ -63,8 +65,6 @@ public class ProductModelDS implements ProductModel {
 			preparedStatement.setString(9, product.getSapore());
 
 			preparedStatement.executeUpdate();
-
-			connection.commit();
 		} finally {
 			try {
 				if (preparedStatement != null) {
@@ -86,7 +86,8 @@ public class ProductModelDS implements ProductModel {
 	public synchronized VinoBean doRetrieveByKey(String codice) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-
+		
+		System.out.println("retrieve by key");
 		VinoBean bean = new VinoBean();
 
 		String selectSQL = "SELECT * FROM " + Constants.VINO_DB_TABLE_NAME + " WHERE id_prodotto = ?";

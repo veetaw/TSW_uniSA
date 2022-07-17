@@ -360,8 +360,9 @@ footer {
               <tr class="tabletitle">
                 <th>Vino</th>
                 <th>Quantità</th>
-                <th>Prezzo per singolo</th>
-                <th>Total</th>
+                <th>Prezzo per singolo (IVA INCLUSA)</th>
+                <th>IVA</th>
+                <th>Totale</th>
               </tr>
           </thead>
           
@@ -375,6 +376,7 @@ footer {
 		            <td data-label="Vino" class="tableitem"><%= vino.getNome() %></td>
 		            <td data-label="Quantità" class="tableitem"><%= qt %></td>
 		            <td data-label="Prezzo per singolo" class="tableitem"><%= String.format("%.2f", vino.getPrezzo()) %> €</td>
+		            <td data-label="IVA" class="tableitem">22%</td>
 		            <td data-label="Total" class="tableitem"><%= String.format("%.2f", (vino.getPrezzo() * qt)) %> €</td>
 		          </tr>
           
