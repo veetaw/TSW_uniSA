@@ -47,7 +47,7 @@ public class OrderModel {
 
 			statement.setString(1, idOrdine);
 			statement.setString(2, "in elaborazione");
-			statement.setDate(3, new Date(Calendar.getInstance().getTime().getTime()));
+			statement.setDate(3, new Date(System.currentTimeMillis()));
 			statement.setString(4, user.getUsername());
 
 			statement.executeUpdate();
@@ -81,7 +81,7 @@ public class OrderModel {
 		Connection connection = null;
 		PreparedStatement statement = null;
 
-		String _getAllOrdersByID = "SELECT * FROM ordine WHERE username_utente = '" + user.getUsername() + "'";
+		String _getAllOrdersByID = "SELECT * FROM ordine WHERE username_utente = '" + user.getUsername() + "' ORDER BY data DESC";
 
 		try {
 			connection = dataSource.getConnection();
@@ -147,6 +147,78 @@ public class OrderModel {
 		return ordini;
 	}
 
+	public synchronized Collection<OrderBean> getAllOrdersAdmin() throws SQLException {
+		ArrayList<OrderBean> ordini = new ArrayList<>();
+
+		Connection connection = null;
+		PreparedStatement statement = null;
+
+		String _getAllOrdersByID = "SELECT * FROM ordine";
+
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.prepareStatement(_getAllOrdersByID);
+
+			ResultSet resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				OrderBean order = new OrderBean();
+
+				String usernameUtente = resultSet.getString("username_utente");
+				String idOrdine = resultSet.getString("id_ordine");
+				order.setIdOrdine(idOrdine);
+				order.setStato(resultSet.getString("stato"));
+				order.setDate(resultSet.getDate("data"));
+				order.setUsernameUtente(usernameUtente);
+
+				String _getInfoVinoSQL = "select v.* " + "from composizione_ordine as c " + "join vino as v "
+						+ "on c.id_prodotto_ordinato = v.id_prodotto " + "WHERE c.id_ordine_cliente = '" + idOrdine
+						+ "';";
+				PreparedStatement statement2 = null;
+				try {
+					statement2 = connection.prepareStatement(_getInfoVinoSQL);
+					ResultSet prodInfoResSet = statement2.executeQuery();
+
+					while (prodInfoResSet.next()) {
+						VinoBean bean = new VinoBean();
+
+						bean.setIdProdotto(prodInfoResSet.getString("id_prodotto"));
+						bean.setNome(prodInfoResSet.getString("nome"));
+						bean.setDescrizione(prodInfoResSet.getString("descrizione"));
+						bean.setGradazione(prodInfoResSet.getFloat("gradazione"));
+						bean.setPrezzo(prodInfoResSet.getFloat("prezzo"));
+						bean.setRegione(prodInfoResSet.getString("regione"));
+						bean.setUrl(prodInfoResSet.getString("url"));
+						bean.setTipo(prodInfoResSet.getString("tipo"));
+						bean.setSapore(prodInfoResSet.getString("sapore"));
+
+						order.addProduct(bean);
+					}
+				} finally {
+					if (statement2 != null) {
+						statement2.close();
+					}
+				}
+
+				ordini.add(order);
+			}
+
+		} finally {
+			try {
+				if (statement != null) {
+					statement.close();
+				}
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+
+		}
+
+		return ordini;
+	}
+	
 	public OrderBean getOrderByID(String orderID, UserBean user) throws SQLException {
 		OrderBean order = new OrderBean();
 		Connection connection = null;

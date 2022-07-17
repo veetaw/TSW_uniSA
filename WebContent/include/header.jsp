@@ -39,6 +39,14 @@
 		        <section>
 		        </section>
 		        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+		        	<% if(session != null && session.getAttribute("login_info") != null) {
+		        		UserBean __user = (UserBean) session.getAttribute("login_info");
+		        		if(__user.getTipo().equals("amministratore")){
+		        	%>
+		        			<button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" onclick="window.location.href='admin'">admin_panel_settings</button>
+		        	<%
+		        		}
+		        	}%>
 		            <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Ricerca" onclick="window.location.href = 'search'">search</button>
 		            <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Carrello" onclick="window.location.href = 'cart'">shopping_cart</button> <span id="plusonecart" style="display: none;">+1</span>
 		        	<% if(session != null && session.getAttribute("login_info") != null) { %>

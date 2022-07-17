@@ -20,6 +20,7 @@
 	%>
 	
 	<head>
+	    <link href="assets/favicon.ico" rel="icon" type="image/x-icon">
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
 			<title>Storico Ordini</title>
 		    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -54,7 +55,7 @@
 			function getListaCompletaTemplate(ordine, count) {
 				var html = `<li class="material-card-ordine container-ordine-` + count + `">
                 <span class="mdc-typography--body1" style="font-weight: bold;">
-                	Ordine numero ` + (count + 1) + ` del ` + ordine.data + `
+                	Ordine effettuato il ` + ordine.data + `
             	</span>
 				<ul class="mdc-list mdc-list-custom" id="lista-prodotti-ordine-nr-` + count + `">
 				</ul>

@@ -20,6 +20,8 @@
 	<%@ page contentType="text/html; 
 	charset=UTF-8" import="java.util.*,model.VinoBean, model.Cart"%>
 	<head>
+	    <link href="assets/favicon.ico" rel="icon" type="image/x-icon">
+
 		<title>Inserisci dati carta</title>
 		<link rel="stylesheet" href="checkout/checkout.css">
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -83,8 +85,7 @@
 				success: function (response) {
 					if(response.status == 1) {
 						setTimeout(function() {
-							alert("Grazie per l'acquisto"); // TODO: fare una pagina con scritto grazie
-							window.location.href="home";
+							window.location.href="grazie.html";
 						}, 1000);
 					}
 				},

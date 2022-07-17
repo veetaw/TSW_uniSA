@@ -24,6 +24,8 @@
 	%>
 
 	<head>
+	    <link href="assets/favicon.ico" rel="icon" type="image/x-icon">
+
 	<title>Fattura </title>
 	<style>
 @import url(https://fonts.googleapis.com/css?family=Roboto:100,300,400,900,700,500,300,100);

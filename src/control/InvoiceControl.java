@@ -48,6 +48,11 @@ public class InvoiceControl extends HttpServlet {
 		try {
 			OrderBean order = orderModel.getOrderByID(orderID, user);
 			
+			if(order == null) {
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/404.html");
+				dispatcher.forward(request, response);
+				return;
+			}
 			session.removeAttribute("ordine_fattura");
 			session.setAttribute("ordine_fattura", order);
 			

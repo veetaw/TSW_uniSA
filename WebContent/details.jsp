@@ -3,6 +3,9 @@
 	pageEncoding="UTF-8"%>
 <%
 VinoBean product = (VinoBean) request.getAttribute("details");
+if(product.getNome() == null || product.getPrezzo() == null || product.getDescrizione() == null) {
+	response.sendRedirect("404.html");
+}
 %>
 
 <!DOCTYPE html>
@@ -13,7 +16,7 @@ VinoBean product = (VinoBean) request.getAttribute("details");
 	
 	<head>
 	    <title>Catalogo La casa di Bacco</title>
-	
+	    <link href="assets/favicon.ico" rel="icon" type="image/x-icon">
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
@@ -72,9 +75,33 @@ VinoBean product = (VinoBean) request.getAttribute("details");
 	            	<span class="mdc-typography--caption">
 	            		<%= product.getDescrizione() %>
 	            	</span>
+	            	<br>
+	            	<br>
+	            	<span class="mdc-typography--headline6">
+	            		Scheda tecnica:
+	            	</span>
+	            	<br>
+	            	<br>
+					           	<table>
+           		<tr>
+           			<td><b>Regione di provenienza</b></td>
+           			<td><%= product.getRegione() %></td>
+           		</tr>
+           		<tr>
+           			<td><b>Sapore</b></td>
+           			<td><%= product.getSapore() %></td>
+           		</tr>
+           		<tr>
+           			<td><b>Tipo</b></td>
+           			<td><%= product.getTipo() %> </td>
+           		</tr>
+           		<tr>
+           			<td><b>Gradazione</b></td>
+           			<td><%= product.getGradazione() %> </td>
+           	</table>
 					
 				</div>
-			</div>
+			</div>           	
 			
 		</main>
 		<%@ include file="include/footer.jsp" %>

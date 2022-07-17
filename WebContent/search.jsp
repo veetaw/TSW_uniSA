@@ -12,6 +12,7 @@ System.out.println(result);
 	charset=UTF-8" import="java.util.*,model.VinoBean,model.Cart"%>
 	
 	<head>
+	    <link href="assets/favicon.ico" rel="icon" type="image/x-icon">
 	    <title>Catalogo La casa di Bacco</title>
 	
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,6 +22,28 @@ System.out.println(result);
 	    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
 	    <link rel="stylesheet" href="css/main.css">
 	    <link rel="stylesheet" href="css/search_bar.css">
+	    
+	    <script>
+    	function addToCart(id) {
+    		$.ajax({
+    			url: 'cart',
+    			type: 'POST',
+    			data: jQuery.param({ action: 'add', id_prodotto: id}),
+				contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+				success: function (response) {
+					$("#plusonecart").show();
+					setTimeout(function() {
+						$("#plusonecart").hide();
+					}, 1000);
+				},
+				error: function () {
+					alert("error");
+				}
+
+    		});
+    	}
+
+	    </script>
 	</head>
 	
 	<body style="padding: 0; margin: 0;" class="mdc-typography">
