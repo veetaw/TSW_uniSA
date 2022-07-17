@@ -57,11 +57,8 @@ public class CheckoutControl extends HttpServlet {
 		if(action == null || action.isEmpty()) {
 			doGet(request, response);
 		}
-		
-		System.out.println("action received: "  + action);
-		
+				
 		if(action.equals("new")) {
-			System.out.print("aoaoao\n");
 			try {
 				orderModel.newOrder(user, cart.toCollection());
 				

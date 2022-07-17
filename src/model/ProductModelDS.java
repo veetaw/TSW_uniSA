@@ -240,8 +240,9 @@ public class ProductModelDS implements ProductModel {
 		PreparedStatement preparedStatement = null;
 
 		Collection<VinoBean> products = new LinkedList<VinoBean>();
+		if(nome == null || nome.isEmpty()) nome = "";
 		
-		String _SQLQuery = "SELECT * from " + Constants.VINO_DB_TABLE_NAME + " WHERE nome LIKE '" + nome + "%' ";
+		String _SQLQuery = "SELECT * from " + Constants.VINO_DB_TABLE_NAME + " WHERE nome LIKE '%" + nome + "%' ";
 		
 		// se è stato passato un filtro per regione quindi la variabile regione non è nè null nè vuota, allora aggiungo
 		// il filtro alla query SQL

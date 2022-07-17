@@ -46,7 +46,7 @@ public class SearchControl extends HttpServlet {
 		String orderByPrezzo = request.getParameter("orderByPrezzo"); // potrà essere NULL (default), ASC per crescente,
 																		// DESC per decrescente
 
-		if(nome == null || nome.isEmpty()) {
+		if((nome == null || nome.isEmpty()) && (tipo == null || tipo.isEmpty())) {
 			request.setAttribute("status", "Ricerca non valida");
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/search.jsp");
 			dispatcher.forward(request, response);

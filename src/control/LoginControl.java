@@ -47,7 +47,7 @@ public class LoginControl extends HttpServlet {
 			JSONObject r = new JSONObject();
 
 			try {
-				r.put("status", 1);
+				r.put("status", 0);
 			} catch (JSONException e1) {
 				e1.printStackTrace();
 				System.out.println("Errore nella creazione del json d'errore");

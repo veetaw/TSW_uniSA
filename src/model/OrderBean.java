@@ -1,19 +1,24 @@
 package model;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /*
- *   id_ordine varchar(32) primary key,
+    id_ordine varchar(32) primary key,
     stato enum("in elaborazione", "elaborato","spedito","consegnato") not null,
     data date not null,
     username_utente varchar(32),
     foreign key (username_utente) references utente(username) 
  */
 public class OrderBean {
-	String idOrdine;
-	String stato;
-	Date date;
-	String usernameUtente;
+	private String idOrdine;
+	private String stato;
+	private Date date;
+	private String usernameUtente;
+	
+	private HashMap<VinoBean, Integer> prodottiOrdinati = new HashMap<>();
+	
 	/**
 	 * @return the idOrdine
 	 */
@@ -63,15 +68,32 @@ public class OrderBean {
 		this.usernameUtente = usernameUtente;
 	}
 	
-	public OrderBean(String idOrdine, String stato, Date date, String usernameUtente) {
+	public void addProduct(VinoBean product) {
+		Integer value = prodottiOrdinati.containsKey(product) ? prodottiOrdinati.get(product) : 0;
+		prodottiOrdinati.put(product, value + 1);
+	}
+
+	public HashMap<VinoBean, Integer> getProducts() {
+		return prodottiOrdinati;
+	}
+	
+	public OrderBean(String idOrdine, String stato, Date date, String usernameUtente,
+			HashMap<VinoBean, Integer> prodottiOrdinati) {
+		super();
 		this.idOrdine = idOrdine;
 		this.stato = stato;
 		this.date = date;
 		this.usernameUtente = usernameUtente;
+		this.prodottiOrdinati = prodottiOrdinati;
 	}
-	public OrderBean(String stato, Date date, String usernameUtente) {
+
+	public OrderBean(String idOrdine, String stato, Date date, String usernameUtente) {
 		this.stato = stato;
 		this.date = date;
 		this.usernameUtente = usernameUtente;
+	}
+	
+	public OrderBean() {
+		
 	}
 }
