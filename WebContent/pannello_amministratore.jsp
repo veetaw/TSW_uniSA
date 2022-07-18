@@ -205,6 +205,7 @@ Collection<?> products = (Collection<?>) request.getAttribute("prodotti");
 				
 				function drawTab() {
 					$("#modifica_vino").hide();
+					$("#nuovo_vino").hide();
 					selectedProductID = null;
 					if(currentTab == 0) {
 						$("#prodotti_disponibili").hide();
@@ -259,19 +260,52 @@ Collection<?> products = (Collection<?>) request.getAttribute("prodotti");
 
 				}
 				
+				function mostraNuovoCliente() {
+					clearTab();
+					$("#nuovo_vino").show();
+				}
 				
-				$(document).ready(function() {
-					const colore = new  mdc.select.MDCSelect(document.querySelector('#mdc-select-colore'));
-					const tipo = new  mdc.select.MDCSelect(document.querySelector('#mdc-select-tipo'));
+				function nuovoVino() {
+					console.log("nuovo vino");
+					var nome = $("#nomenew").val();
+					var descrizione = $("#descrizionenew").val();
+					var gradazione = $("#gradazionenew").val();
+					var prezzo = $("#prezzonew").val();
+					var regione = $("#regionenew").val();
+					var url = $("#urlimmaginenew").val();
+					var tipoString = "rosso";
+					var saporeString = "secco";
+					console.log("ajax call");
+		    		$.ajax({
+		    			url: 'admin',
+		    			type: 'POST',
+		    			data: jQuery.param({
+		    				action: "addnew",
+		    				product: selectedProductID,
+		    				nome: nome,
+		    				descrizione: descrizione,
+		    				gradazione: gradazione,
+		    				prezzo: prezzo,
+		    				regione: regione,
+		    				url: url,
+		    				colore: tipoString,
+		    				sapore: saporeString,
+		    			}),
+						contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+						success: function (response) {
+							
+							setTimeout(function() {
+								window.location.reload();
+							}, 1000);
+						
+						},
+						error: function () {
+							alert("error");
+						}
 
-					colore.listen('MDCSelect:change', () => {
-					  console.log(`Selected option at index ${select.selectedIndex} with value "${select.value}"`);
-					});
-
-					tipo.listen('MDCSelect:change', () => {
-					  console.log(`Selected option at index ${select.selectedIndex} with value "${select.value}"`);
-					});
-				});
+		    		});
+				}
+				
 				$(document).ready(drawTab);
 			</script>
 	</head>
@@ -304,6 +338,12 @@ Collection<?> products = (Collection<?>) request.getAttribute("prodotti");
                 <span class="mdc-typography--headline6">
                     Lista prodotti disponibili
 	            </span>
+	            <br><br>
+          			<button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--icon-leading" onclick="mostraNuovoCliente()">
+						<span class="mdc-button__ripple"></span>
+						<i class="material-icons mdc-button__icon" aria-hidden="true" style="color: #550024">add</i>
+						<span class="mdc-button__label" style="color: #550024">NUOVO VINO</span>
+				  	</button>
 	        <div class="mdc-layout-grid__inner">
 	        	
 	        	
@@ -443,9 +483,79 @@ Collection<?> products = (Collection<?>) request.getAttribute("prodotti");
   <input type="text" class="mdc-text-field__input" aria-labelledby="my-label-id" id="urlimmagine">
 </label>
 <br>
+<br>
+          			<button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--icon-leading" onclick="sendEditToDB()">
+						<span class="mdc-button__ripple"></span>
+						<i class="material-icons mdc-button__icon" aria-hidden="true" style="color: #550024">edit</i>
+						<span class="mdc-button__label" style="color: #550024">Invia modifiche</span>
+				  	</button>
+			</div>
+			
+<!--  NUOVO VINO -->
+			<div id="nuovo_vino">
+          			<button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--icon-leading" onclick="drawTab()">
+						<span class="mdc-button__ripple"></span>
+						<i class="material-icons mdc-button__icon" aria-hidden="true" style="color: #550024">arrow_back</i>
+						<span class="mdc-button__label" style="color: #550024">INDIETRO</span>
+				  	</button><br><br>
 
+<span class="mdc-typography--body1">NOME VINO:</span>
+<label class="mdc-text-field mdc-text-field--outlined">
+  <span class="mdc-notched-outline">
+    <span class="mdc-notched-outline__leading"></span>
+    <span class="mdc-notched-outline__notch">
+    </span>
+    <span class="mdc-notched-outline__trailing"></span>
+  </span>
+  <input type="text" class="mdc-text-field__input" aria-labelledby="my-label-id" id="nomenew">
+</label>
+<br>
+<span class="mdc-typography--body1">DESCRIZIONE VINO:</span>
+<label class="mdc-text-field mdc-text-field--outlined mdc-text-field--textarea mdc-text-field--no-label">
+  <span class="mdc-notched-outline">
+    <span class="mdc-notched-outline__leading"></span>
+    <span class="mdc-notched-outline__trailing"></span>
+  </span>
+  <span class="mdc-text-field__resizer">
+    <textarea class="mdc-text-field__input" rows="8" cols="40" aria-label="Label" id="descrizionenew"></textarea>
+  </span>
+</label>
+<br>
+<span class="mdc-typography--body1">GRADAZIONE VINO:</span>
+<label class="mdc-text-field mdc-text-field--outlined">
+  <span class="mdc-notched-outline">
+    <span class="mdc-notched-outline__leading"></span>
+    <span class="mdc-notched-outline__notch">
+    </span>
+    <span class="mdc-notched-outline__trailing"></span>
+  </span>
+  °<input type="number" class="mdc-text-field__input" aria-labelledby="my-label-id" id="gradazionenew">
+</label>
+<br>
+<span class="mdc-typography--body1">PREZZO VINO:</span>
+<label class="mdc-text-field mdc-text-field--outlined">
+  <span class="mdc-notched-outline">
+    <span class="mdc-notched-outline__leading"></span>
+    <span class="mdc-notched-outline__notch">
+    </span>
+    <span class="mdc-notched-outline__trailing"></span>
+  </span>
+  €<input type="number" class="mdc-text-field__input" aria-labelledby="my-label-id" id="prezzonew">
+</label>
+<br>
+<span class="mdc-typography--body1">REGIONE VINO:</span>
+<label class="mdc-text-field mdc-text-field--outlined">
+  <span class="mdc-notched-outline">
+    <span class="mdc-notched-outline__leading"></span>
+    <span class="mdc-notched-outline__notch">
+    </span>
+    <span class="mdc-notched-outline__trailing"></span>
+  </span>
+  <input type="text" class="mdc-text-field__input" aria-labelledby="my-label-id" id="regionenew">
+</label>
+<br>
 <div class="component-wrapper">
-  <div class="mdc-select mdc-select--filled" id="mdc-select-colore">
+  <div class="mdc-select mdc-select--filled" id="mdc-select-tiponew">
     <div class="mdc-select__anchor">
       <span class="mdc-select__ripple"></span>
       <span class="mdc-select__selected-text"></span>
@@ -457,35 +567,45 @@ Collection<?> products = (Collection<?>) request.getAttribute("prodotti");
           </polygon>
         </svg>
       </span>
-      <span class="mdc-floating-label"><span class="mdc-typography--body1">SAPORE VINO:</span></span>
+      <span class="mdc-floating-label"><span class="mdc-typography--body1">TIPO VINO:</span></span>
       <span class="mdc-line-ripple"></span>
     </div>
 
     <div class="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth">
       <ul class="mdc-list">
-        <li class="mdc-list-item mdc-list-item--selected" data-value="" aria-selected="true">
+        <li id="sapore" class="mdc-list-item mdc-list-item--selected" data-value="" aria-selected="true">
           <span class="mdc-list-item__ripple"></span>
         </li>
-        <li class="mdc-list-item" data-value="secco">
+        <li class="mdc-list-item" data-value="bianco">
           <span class="mdc-list-item__ripple"></span>
-          <span class="mdc-list-item__text">SECCO</span>
+          <span class="mdc-list-item__text">BIANCO</span>
         </li>
-        <li class="mdc-list-item" data-value="dolce">
+        <li class="mdc-list-item" data-value="rosso">
           <span class="mdc-list-item__ripple"></span>
-          <span class="mdc-list-item__text">DOLCE</span>
+          <span class="mdc-list-item__text">ROSSO</span>
         </li>
       </ul>
     </div>
   </div>
 </div>
 <br>
-          			<button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--icon-leading" onclick="sendEditToDB()">
+<span class="mdc-typography--body1">URL IMMAGINE VINO:</span>
+<label class="mdc-text-field mdc-text-field--outlined">
+  <span class="mdc-notched-outline">
+    <span class="mdc-notched-outline__leading"></span>
+    <span class="mdc-notched-outline__notch">
+    </span>
+    <span class="mdc-notched-outline__trailing"></span>
+  </span>
+  <input type="text" class="mdc-text-field__input" aria-labelledby="my-label-id" id="urlimmaginenew">
+</label>
+<br>
+          			<button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--icon-leading" onclick="nuovoVino()">
 						<span class="mdc-button__ripple"></span>
 						<i class="material-icons mdc-button__icon" aria-hidden="true" style="color: #550024">edit</i>
 						<span class="mdc-button__label" style="color: #550024">Invia modifiche</span>
 				  	</button>
 			</div>
-		
 		</main>
 </body>
 </html>

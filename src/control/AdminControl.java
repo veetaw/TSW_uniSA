@@ -135,6 +135,7 @@ public class AdminControl extends HttpServlet {
 				break;
 			case "addnew":
 				try {
+					System.out.println(request.getParameter("gradazione"));
 					VinoBean vino = new VinoBean();
 					vino.setNome(request.getParameter("nome"));
 					vino.setDescrizione(request.getParameter("descrizione"));
